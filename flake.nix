@@ -50,6 +50,9 @@
         })
         # Import unseres neuen Neovim-Moduls
         ./modules/neovim/default.nix
+
+        # Import unseres neuen tmux-Moduls
+        ./modules/tmux/tmux.nix
       ];
     };
   };
