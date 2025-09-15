@@ -23,6 +23,7 @@
 
           # Globale Pakete, die zu keinem speziellen Modul gehören
           home.packages = [
+          pkgs.gh
             pkgs.ripgrep
           ];
 
