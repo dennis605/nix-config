@@ -35,6 +35,10 @@
             pkgs.wezterm
             pkgs.gh
           ];
+          programs.wezterm = {
+            enable = true;
+            config = builtins.readFile ./config/.wezterm.lua;
+          };
 
           # Diese Zeile ist wichtig, damit Home Manager sich selbst verwalten kann.
           programs.home-manager.enable = true;
