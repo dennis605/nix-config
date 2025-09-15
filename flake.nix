@@ -32,17 +32,18 @@
 
           # --- ZENTRALE DOTFILE-VERWALTUNG ---
           # Alles, was unter ~/.config leben soll
+
           xdg.configFile = {
+            # nvim bleibt ein rekursives Verzeichnis
             "nvim" = {
               source = ./dotfiles/.config/nvim;
               recursive = true;
             };
-            "wezterm" = {
-              source = ./dotfiles/.config/wezterm;
-              recursive = true;
+            # wezterm ist jetzt eine einzelne Datei
+            "wezterm.lua" = {
+              source = ./dotfiles/.config/wezterm.lua;
             };
           };
-
           # Alles, was direkt im Home-Verzeichnis leben soll
           home.file = {
             ".tmux.conf" = {
