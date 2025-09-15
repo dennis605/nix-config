@@ -1,58 +1,60 @@
 {
-  description = "Meine erste Nix-Konfiguration";
+  description = "Meine plattformübergreifende Nix-Konfiguration";
 
   inputs = {
-    # Wir sagen Nix: "Hole dir die Paketsammlung von diesem GitHub-Repository"
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
     home-manager = {
       url = "github:nix-community/home-manager";
-      # Wichtig: Wir sagen Home Manager, er soll die gleiche nixpkgs-Version
-      # benutzen, die wir oben definiert haben. Das verhindert Konflikte.
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  # Wir übergeben die Inputs (nixpkgs, home-manager) an die Outputs, damit wir sie verwenden können.
   outputs = { self, nixpkgs, home-manager, ... }: {
-
-    # Wir definieren eine "Home-Konfiguration" und geben ihr einen Namen, z.B. "linux-user"
     homeConfigurations."linux-user" = home-manager.lib.homeManagerConfiguration {
-      
-      # Wir müssen angeben, für welches System wir bauen (z.B. ein Linux-PC mit Intel/AMD-CPU)
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
 
-      # Hier kommt die eigentliche Konfiguration für den Benutzer rein.
-      # Das Modul ist eine Funktion, die 'pkgs' als Argument erhält.
+      # Hier importieren wir alle unsere Module
       modules = [
+        # 1. Das Hauptmodul mit den globalen Einstellungen und der zentralen Dateiverwaltung
         ({ pkgs, ... }: {
           home.username = "dennis";
           home.homeDirectory = "/home/dennis";
+          home.stateVersion = "23.11";
 
-          # Hier ist die Liste der Pakete, die wir installieren wollen.
+          # Globale Pakete, die zu keinem speziellen Modul gehören
           home.packages = [
-            pkgs.ripgrep  # Wir referenzieren ripgrep aus nixpkgs
-            pkgs.wezterm
-            pkgs.gh
+            pkgs.ripgrep
           ];
-          programs.wezterm = {
-            enable = true;
-            extraConfig = builtins.readFile ./config/.wezterm.lua;
-          };
 
-          # Diese Zeile ist wichtig, damit Home Manager sich selbst verwalten kann.
+          # Wichtige Grundeinstellungen
           programs.home-manager.enable = true;
           programs.bash.enable = true;
 
-          # Diese Zeile ist eine Art "Version-Pinning" für deine Konfiguration.
-          # Es ist gute Praxis, sie zu setzen.
-          home.stateVersion = "23.11";
-        })
-        # Import unseres neuen Neovim-Moduls
-        ./modules/neovim/default.nix
+          # --- ZENTRALE DOTFILE-VERWALTUNG ---
+          # Alles, was unter ~/.config leben soll
+          xdg.configFile = {
+            "nvim" = {
+              source = ./dotfiles/.config/nvim;
+              recursive = true;
+            };
+            "wezterm" = {
+              source = ./dotfiles/.config/wezterm;
+              recursive = true;
+            };
+          };
 
-        # Import unseres neuen tmux-Moduls
+          # Alles, was direkt im Home-Verzeichnis leben soll
+          home.file = {
+            ".tmux.conf" = {
+              source = ./dotfiles/.tmux.conf;
+            };
+          };
+        })
+
+        # 2. Import der anwendungsspezifischen Module
+        ./modules/neovim/default.nix
         ./modules/tmux/tmux.nix
+        # Hier könnten wir ein ./modules/wezterm.nix hinzufügen, das nur `home.packages = [ pkgs.wezterm ];` enthält.
       ];
     };
   };
