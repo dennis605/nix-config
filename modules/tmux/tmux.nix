@@ -16,7 +16,7 @@
       repo = ".tmux";
       rev = "master";
       # Absichtlich falscher Hash, um den richtigen zu bekommen
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-XXiyPSvrrtZgQ1IN797O1vgZDkwppKImgL+OQE507Fs=";
     };
     recursive = true;
   };
