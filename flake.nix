@@ -37,7 +37,7 @@
           ];
           programs.wezterm = {
             enable = true;
-            config = builtins.readFile ./config/.wezterm.lua;
+            extraConfig = builtins.readFile ./config/.wezterm.lua;
           };
 
           # Diese Zeile ist wichtig, damit Home Manager sich selbst verwalten kann.
