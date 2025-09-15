@@ -32,6 +32,7 @@
           # Hier ist die Liste der Pakete, die wir installieren wollen.
           home.packages = [
             pkgs.ripgrep  # Wir referenzieren ripgrep aus nixpkgs
+            pkgs.wezterm
             pkgs.gh
           ];
 
