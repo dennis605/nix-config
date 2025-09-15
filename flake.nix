@@ -48,6 +48,8 @@
           # Es ist gute Praxis, sie zu setzen.
           home.stateVersion = "23.11";
         })
+        # Import unseres neuen Neovim-Moduls
+        ./modules/neovim/default.nix
       ];
     };
   };
